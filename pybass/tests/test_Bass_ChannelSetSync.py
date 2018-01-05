@@ -6,9 +6,11 @@
 
 from pybass import *
 
+
 @SYNCPROC
 def onEndPlay(handle, buffer, length, user):
     print("playing finished.")
+
 
 if __name__ == "__main__":
     BASS_Init(-1, 44100, 0, 0, 0)
@@ -20,5 +22,3 @@ if __name__ == "__main__":
     play_handle(handle, False)
 
     BASS_Free()
-
-

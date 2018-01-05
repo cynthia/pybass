@@ -20,8 +20,11 @@ BASS_FILEPROCS = pybass.BASS_FILEPROCS
 if platform.system().lower() == 'windows':
 	bass_tta_module = ctypes.WinDLL('bass_tta')
 	func_type = ctypes.WINFUNCTYPE
+elif platform.system().lower() == 'darwin':
+	bass_tta_module = ctypes.CDLL('libbass_tta.dylib', mode=ctypes.RTLD_GLOBAL)
+	func_type = ctypes.CFUNCTYPE
 else:
-	bass_tta_module = ctypes.CDLL('bass_tta')
+	bass_tta_module = ctypes.CDLL('libbass_tta.so', mode=ctypes.RTLD_GLOBAL)
 	func_type = ctypes.CFUNCTYPE
 
 
@@ -37,9 +40,9 @@ BASS_TTA_StreamCreateFileUser = func_type(HSTREAM, ctypes.c_ulong, ctypes.c_ulon
 
 if __name__ == "__main__":
 	if not pybass.BASS_Init(-1, 44100, 0, 0, 0):
-		print('BASS_Init error %s' % pybass.get_error_description(pybass.BASS_ErrorGetCode()))
+		print(('BASS_Init error %s' % pybass.get_error_description(pybass.BASS_ErrorGetCode())))
 	else:
 		handle = BASS_TTA_StreamCreateFile(False, b'test.tta', 0, 0, 0)
 		pybass.play_handle(handle)
 		if not pybass.BASS_Free():
-			print('BASS_Free error %s' % pybass.get_error_description(pybass.BASS_ErrorGetCode()))
+			print(('BASS_Free error %s' % pybass.get_error_description(pybass.BASS_ErrorGetCode())))
